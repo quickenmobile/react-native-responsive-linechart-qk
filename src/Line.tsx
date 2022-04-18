@@ -5,7 +5,7 @@ import { G, Path, Rect } from 'react-native-svg'
 import ChartContext from './ChartContext'
 import { adjustPointsForThickStroke, calculateTooltipIndex } from './Line.utils'
 import { ChartDataPoint, Smoothing, Stroke, Shape } from './types'
-import { scalePointsToDimensions, svgPath } from './utils'
+import { scalePointsToDimensions, scalePointsToDimensionsWithScatterInfo, svgPath } from './utils'
 
 type Props = {
   /** Theme for the line */
@@ -78,7 +78,7 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
   }, [props.initialTooltipIndex])
 
   React.useEffect(() => {
-    const scaledPoints = scalePointsToDimensions(data, viewportDomain, dimensions)
+    const scaledPoints = scalePointsToDimensionsWithScatterInfo(data, viewportDomain, dimensions)
     const newIndex = calculateTooltipIndex(scaledPoints, lastTouch?.position)
 
     let tooltipTimer: NodeJS.Timeout
@@ -114,7 +114,7 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
     }
   }, [lastTouch, hideTooltipAfter])
 
-  const scaledPoints = scalePointsToDimensions(data, viewportDomain, dimensions)
+  const scaledPoints = scalePointsToDimensionsWithScatterInfo(data, viewportDomain, dimensions)
   const points = adjustPointsForThickStroke(scaledPoints, stroke)
   const path = svgPath(points, smoothing, tension)
 
