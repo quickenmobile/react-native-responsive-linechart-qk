@@ -33,6 +33,8 @@ type Props = {
   initialTooltipIndex?: number
   /** Data for the chart. Overrides optional data provided in `<Chart />`. */
   data?: ChartDataPoint[]
+  /** Set to true if the zero reference line shoild be visible */
+  drawZeroReferenceLine: boolean
 }
 
 export type LineHandle = {
@@ -44,7 +46,7 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
   const [tooltipIndex, setTooltipIndex] = React.useState<number | undefined>(props.initialTooltipIndex)
 
   const {
-    theme: { stroke, scatter },
+    theme: { stroke, scatter, referenceLineStroke },
     tooltipComponent,
     data = contextData,
     tension,
@@ -116,6 +118,16 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
   const points = adjustPointsForThickStroke(scaledPoints, stroke)
   const path = svgPath(points, smoothing, tension)
 
+  let zeroLine = null
+  if (drawZeroReferenceLine) {
+    const scaledZeroPoints = scalePointsToDimensions([{x: -1, y: 0}, {
+      x: points[points.length - 1].x,
+      y: 0
+    }], viewportDomain, dimensions)
+    const zeroLinePoints = adjustPointsForThickStroke(scaledZeroPoints, referenceLineStroke)
+    zeroLine = svgPath(zeroLinePoints, 'none', 0)
+  }
+
   return (
     <React.Fragment>
       <G translateX={viewportOrigin.x} translateY={viewportOrigin.y}>
@@ -153,6 +165,17 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
             />
           )
         })}
+
+        {drawZeroReferenceLine && <Path
+          d={zeroLine}
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={referenceLineStroke.dashArray.length > 0 ? referenceLineStroke.dashArray.join(',') : undefined}
+          stroke={referenceLineStroke.color}
+          strokeWidth={referenceLineStroke.width}
+          strokeOpacity={referenceLineStroke.opacity}
+          mask="url(#Mask)"
+        />}
       </G>
       {tooltipIndex !== undefined &&
         tooltipComponent &&
@@ -182,7 +205,14 @@ const defaultProps = {
       },
       selected: {},
     },
+    referenceLineStroke: {
+      color: 'black',
+      width: 1,
+      opacity: 1,
+      dashArray: [],
+    },
   },
   tension: 0.3,
   smoothing: 'none',
+  drawZeroReferenceLine:false,
 }
