@@ -1,6 +1,8 @@
 export type XYValue = { x: number; y: number }
 
-export type ChartDataPoint = XYValue & { meta?: any }
+export type ScatterInfo = { color?: number; disabled?: number }
+
+export type ChartDataPoint = XYValue & ScatterInfo & { meta?: any }
 
 export type Padding = { top?: number; left?: number; right?: number; bottom?: number }
 

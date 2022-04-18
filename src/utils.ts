@@ -10,6 +10,8 @@ export const formatDataForSVG = (data: ChartDataPoint[]) => {
 export const scalePointToDimensions = (data: ChartDataPoint, domain: ChartDomain, dimensions: Dimensions) => ({
   x: scaleXValueToDimensions(data.x, domain, dimensions),
   y: scaleYValueToDimensions(data.y, domain, dimensions),
+  color: data.color,
+  disabled: data.disabled
 })
 
 export const scalePointsToDimensions = (data: ChartDataPoint[], domain: ChartDomain, dimensions: Dimensions) => {

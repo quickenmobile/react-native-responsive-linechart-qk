@@ -53,6 +53,7 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
     hideTooltipOnDragEnd,
     hideTooltipAfter,
     onTooltipSelectEnd = () => {},
+    drawZeroReferenceLine
   } = deepmerge(defaultProps, props)
 
   if (!dimensions) {
@@ -89,7 +90,7 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
         tooltipTimer = setTimeout(() => setTooltipIndex(undefined), hideTooltipAfter)
       }
       onTooltipSelectEnd()
-    } else if (newIndex !== tooltipIndex && lastTouch) {
+    } else if (newIndex !== tooltipIndex && lastTouch && !data[newIndex].disabled) {
       // Hide tooltip after specified time
       if (typeof hideTooltipAfter === 'number') {
         tooltipTimer = setTimeout(() => setTooltipIndex(undefined), hideTooltipAfter)
@@ -145,7 +146,7 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
               x={p.x - shape.width / 2 + shape.dx}
               y={p.y - shape.height / 2 - shape.dy}
               rx={shape.rx}
-              fill={shape.color}
+              fill={p.color ? p.color : shape.color}
               opacity={shape.opacity}
               height={shape.height}
               width={shape.width}
