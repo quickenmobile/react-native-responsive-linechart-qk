@@ -92,7 +92,7 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
         tooltipTimer = setTimeout(() => setTooltipIndex(undefined), hideTooltipAfter)
       }
       onTooltipSelectEnd()
-    } else if (newIndex !== tooltipIndex && lastTouch && !data[newIndex].disabled) {
+    } else if (newIndex !== tooltipIndex && lastTouch && (newIndex === undefined || !data[newIndex].disabled)) {
       // Hide tooltip after specified time
       if (typeof hideTooltipAfter === 'number') {
         tooltipTimer = setTimeout(() => setTooltipIndex(undefined), hideTooltipAfter)

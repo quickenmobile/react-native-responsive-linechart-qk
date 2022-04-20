@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash.clonedeep'
-import { Stroke, XYValue } from './types'
+import { ChartDataPoint, Stroke, XYValue } from './types'
 
-export const adjustPointsForThickStroke = (originalPoints: XYValue[], stroke: Required<Stroke>) => {
+export const adjustPointsForThickStroke = (originalPoints: ChartDataPoint[], stroke: Required<Stroke>) => {
   let points = cloneDeep(originalPoints)
 
   // First and last points are adjusted to prevent "fat" lines from flowing out of the chart
