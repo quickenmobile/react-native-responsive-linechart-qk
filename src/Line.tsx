@@ -99,11 +99,11 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
       }
       // Necessary for Android because pan is called even when finger is not actually panning.
       // If we don't check for this, we have interference with the tap handler
-      if (lastTouch?.type !== 'pan' || Math.abs(lastTouch?.translation?.x) > 5) {
+      if (lastTouch?.type === 'tap') {
         setTooltipIndex(newIndex)
-      }
-      if (typeof onTooltipSelect === 'function' && typeof newIndex === 'number' && data.length > newIndex) {
-        onTooltipSelect(data[newIndex], newIndex)
+        if (typeof onTooltipSelect === 'function' && typeof newIndex === 'number' && data.length > newIndex) {
+          onTooltipSelect(data[newIndex], newIndex)
+        }
       }
     } else if (newIndex === tooltipIndex && lastTouch?.type === 'tap') {
       setTooltipIndex(undefined)
